@@ -14,8 +14,8 @@ class Encoder;
 class Output;
 class Filter;
 class Scene;
-class VideoFrame;
-class AudioFrame;
+struct VideoFrame;
+struct AudioFrame;
 
 // 基础类型定义
 using FrameTime = std::chrono::microseconds;
