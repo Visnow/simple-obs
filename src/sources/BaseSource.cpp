@@ -1,5 +1,5 @@
 #include "SimpleOBS.h"
-#include <iostream>
+#include "Logger.h"
 
 namespace SimpleOBS {
 
@@ -11,13 +11,13 @@ public:
     std::string getId() const override { return "base_source"; }
     
     bool initialize() override {
-        std::cout << "Base source initializing: " << name_ << std::endl;
+        LOG_INFO("Base source initializing: {}", name_);
         return true;
     }
     
     void shutdown() override {
         stop();
-        std::cout << "Base source shutting down: " << name_ << std::endl;
+        LOG_INFO("Base source shutting down: {}", name_);
     }
     
     bool getVideoFrame(VideoFrame& frame) override {
@@ -77,12 +77,12 @@ public:
     
     void start() override {
         active_ = true;
-        std::cout << "Source started: " << name_ << std::endl;
+        LOG_INFO("Source started: {}", name_);
     }
     
     void stop() override {
         active_ = false;
-        std::cout << "Source stopped: " << name_ << std::endl;
+        LOG_INFO("Source stopped: {}", name_);
     }
     
     bool isActive() const override {

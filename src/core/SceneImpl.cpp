@@ -1,17 +1,17 @@
 #include "SceneImpl.h"
-#include <iostream>
+#include "Logger.h"
 #include <algorithm>
 
 namespace SimpleOBS {
 
 SceneImpl::SceneImpl(const std::string& name) 
     : name_(name), initialized_(false) {
-    std::cout << "SceneImpl constructed: " << name_ << std::endl;
+    LOG_DEBUG("SceneImpl constructed: {}", name_);
 }
 
 SceneImpl::~SceneImpl() {
     shutdown();
-    std::cout << "SceneImpl destructed: " << name_ << std::endl;
+    LOG_DEBUG("SceneImpl destructed: {}", name_);
 }
 
 std::string SceneImpl::getName() const {
@@ -24,11 +24,11 @@ std::string SceneImpl::getId() const {
 
 bool SceneImpl::initialize() {
     if (initialized_) {
-        std::cout << "SceneImpl already initialized: " << name_ << std::endl;
+        LOG_DEBUG("SceneImpl already initialized: {}", name_);
         return true;
     }
     
-    std::cout << "SceneImpl initializing: " << name_ << std::endl;
+    LOG_INFO("SceneImpl initializing: {}", name_);
     initialized_ = true;
     return true;
 }
@@ -38,7 +38,7 @@ void SceneImpl::shutdown() {
         return;
     }
     
-    std::cout << "SceneImpl shutting down: " << name_ << std::endl;
+    LOG_INFO("SceneImpl shutting down: {}", name_);
     
     // Stop all sources
     for (auto& source : sources_) {
@@ -52,19 +52,19 @@ void SceneImpl::shutdown() {
 
 void SceneImpl::addSource(SourcePtr source) {
     if (!source) {
-        std::cout << "SceneImpl failed to add source: source is null" << std::endl;
+        LOG_ERROR("SceneImpl failed to add source: source is null");
         return;
     }
     
     // Check if already exists
     auto it = std::find(sources_.begin(), sources_.end(), source);
     if (it != sources_.end()) {
-        std::cout << "SceneImpl source already exists: " << source->getName() << std::endl;
+        LOG_WARN("SceneImpl source already exists: {}", source->getName());
         return;
     }
     
     sources_.push_back(source);
-    std::cout << "SceneImpl added source: " << source->getName() << " to scene: " << name_ << std::endl;
+    LOG_INFO("SceneImpl added source: {} to scene: {}", source->getName(), name_);
 }
 
 void SceneImpl::removeSource(SourcePtr source) {
@@ -80,7 +80,7 @@ void SceneImpl::removeSource(SourcePtr source) {
         }
         
         sources_.erase(it);
-        std::cout << "SceneImpl removed source: " << source->getName() << " from scene: " << name_ << std::endl;
+        LOG_INFO("SceneImpl removed source: {} from scene: {}", source->getName(), name_);
     }
 }
 

@@ -39,9 +39,6 @@ Thumbs.db
 *.temp
 *.log
 
-# Dependencies
-third_party/
-
 # Documentation build
 docs/_build/
 

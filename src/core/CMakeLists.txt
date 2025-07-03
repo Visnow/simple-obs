@@ -2,6 +2,7 @@
 set(CORE_SOURCES
     Engine.cpp
     SceneImpl.cpp
+    Logger.cpp
     VideoFrame.cpp
     AudioFrame.cpp
 )
@@ -17,6 +18,7 @@ target_include_directories(SimpleOBSCore PUBLIC
 
 # 链接依赖
 target_link_libraries(SimpleOBSCore
+    spdlog::spdlog
     ${PLATFORM_LIBS}
     OpenGL::GL
     Threads::Threads

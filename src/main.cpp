@@ -1,55 +1,67 @@
 #include "SimpleOBS.h"
+#include "Logger.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
 
 int main() {
-    std::cout << "=== SimpleOBS Starting ===" << std::endl;
+    // Initialize logger
+    auto& logger = SimpleOBS::Logger::getInstance();
+    if (!logger.initialize()) {
+        std::cerr << "Failed to initialize logger!" << std::endl;
+        return -1;
+    }
+    
+    LOG_INFO_DETAIL("=== SimpleOBS Starting ===");
     
     auto& engine = SimpleOBS::Engine::getInstance();
     
     // Initialize engine
     if (!engine.initialize()) {
-        std::cerr << "Engine initialization failed!" << std::endl;
+        LOG_ERROR_DETAIL("Engine initialization failed!");
         return -1;
     }
     
-    std::cout << "Engine initialized successfully!" << std::endl;
+    LOG_INFO_DETAIL("Engine initialized successfully!");
     
     // Create scene
     auto scene = engine.createScene("Main Scene");
     if (!scene) {
-        std::cerr << "Scene creation failed!" << std::endl;
+        LOG_ERROR_DETAIL("Scene creation failed!");
         return -1;
     }
     
-    std::cout << "Scene created successfully!" << std::endl;
+    LOG_INFO_DETAIL("Scene created successfully!");
     
     // Create source
     auto source = engine.createSource("color_source", "Color Source");
     if (!source) {
-        std::cout << "Source creation failed (expected, source types not implemented yet)" << std::endl;
+        LOG_WARN_DETAIL("Source creation failed (expected, source types not implemented yet)");
     }
     
     // Create encoder
     auto encoder = engine.createEncoder("x264", "H.264 Encoder");
     if (!encoder) {
-        std::cout << "Encoder creation failed (expected, encoder types not implemented yet)" << std::endl;
+        LOG_WARN_DETAIL("Encoder creation failed (expected, encoder types not implemented yet)");
     }
     
     // Create output
     auto output = engine.createOutput("rtmp", "RTMP Output");
     if (!output) {
-        std::cout << "Output creation failed (expected, output types not implemented yet)" << std::endl;
+        LOG_WARN_DETAIL("Output creation failed (expected, output types not implemented yet)");
     }
     
     // Simulate running for a while
-    std::cout << "Simulating run for 5 seconds..." << std::endl;
+    LOG_INFO_DETAIL("Simulating run for 5 seconds...");
     std::this_thread::sleep_for(std::chrono::seconds(5));
     
     // Shutdown engine
     engine.shutdown();
     
-    std::cout << "=== SimpleOBS Shutdown Complete ===" << std::endl;
+    LOG_INFO_DETAIL("=== SimpleOBS Shutdown Complete ===");
+    
+    // Shutdown logger
+    logger.shutdown();
+    
     return 0;
 } 

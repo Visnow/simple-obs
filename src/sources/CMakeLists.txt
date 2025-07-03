@@ -11,9 +11,11 @@ add_library(SimpleOBSSources STATIC ${SOURCES_SOURCES})
 # 设置包含目录
 target_include_directories(SimpleOBSSources PUBLIC
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/src/core
 )
 
 # 链接依赖
 target_link_libraries(SimpleOBSSources
     SimpleOBSCore
+    spdlog::spdlog
 ) 

@@ -1,6 +1,6 @@
 #include "SimpleOBS.h"
 #include "SceneImpl.h"
-#include <iostream>
+#include "Logger.h"
 #include <unordered_map>
 #include <mutex>
 #include <thread>
@@ -13,21 +13,23 @@ public:
     Impl() : streaming_(false) {}
     
     bool initialize() {
-        std::cout << "SimpleOBS Engine initializing..." << std::endl;
+        LOG_INFO_DETAIL("SimpleOBS Engine initializing...");
         // Initialize OpenGL context
         // Initialize audio system
         // Initialize network modules
+        LOG_INFO_DETAIL("SimpleOBS Engine initialized successfully");
         return true;
     }
     
     void shutdown() {
         stopStreaming();
-        std::cout << "SimpleOBS Engine shutting down..." << std::endl;
+        LOG_INFO_DETAIL("SimpleOBS Engine shutting down...");
     }
     
     ScenePtr createScene(const std::string& name) {
         auto scene = std::make_shared<SceneImpl>(name);
         scenes_[name] = scene;
+        LOG_DEBUG_DETAIL("Created scene: {}", name);
         return scene;
     }
     
@@ -36,6 +38,7 @@ public:
         // Currently returns nullptr, will implement specific source types later
         (void)id;  // Avoid unused parameter warning
         (void)name;
+        LOG_WARN_DETAIL("Source creation not implemented yet. ID: {}, Name: {}", id, name);
         return nullptr;
     }
     
@@ -43,6 +46,7 @@ public:
         // Should create different types of encoders based on id
         (void)id;  // Avoid unused parameter warning
         (void)name;
+        LOG_WARN_DETAIL("Encoder creation not implemented yet. ID: {}, Name: {}", id, name);
         return nullptr;
     }
     
@@ -50,6 +54,7 @@ public:
         // Should create different types of outputs based on id
         (void)id;  // Avoid unused parameter warning
         (void)name;
+        LOG_WARN_DETAIL("Output creation not implemented yet. ID: {}, Name: {}", id, name);
         return nullptr;
     }
     
@@ -57,30 +62,36 @@ public:
         // Should create different types of filters based on id
         (void)id;  // Avoid unused parameter warning
         (void)name;
+        LOG_WARN_DETAIL("Filter creation not implemented yet. ID: {}, Name: {}", id, name);
         return nullptr;
     }
     
     bool startStreaming() {
-        if (streaming_) return false;
+        if (streaming_) {
+            LOG_WARN_DETAIL("Streaming already started");
+            return false;
+        }
         
         streaming_ = true;
         streaming_thread_ = std::thread([this]() {
             streamingLoop();
         });
         
-        std::cout << "Starting streaming..." << std::endl;
+        LOG_INFO_DETAIL("Starting streaming...");
         return true;
     }
     
     void stopStreaming() {
-        if (!streaming_) return;
+        if (!streaming_) {
+            return;
+        }
         
         streaming_ = false;
         if (streaming_thread_.joinable()) {
             streaming_thread_.join();
         }
         
-        std::cout << "Stopping streaming..." << std::endl;
+        LOG_INFO_DETAIL("Stopping streaming...");
     }
     
     bool isStreaming() const {
@@ -89,6 +100,7 @@ public:
 
 private:
     void streamingLoop() {
+        LOG_DEBUG_DETAIL("Streaming loop started");
         while (streaming_) {
             // Main rendering loop
             // 1. Render scenes
@@ -97,6 +109,7 @@ private:
             
             std::this_thread::sleep_for(std::chrono::milliseconds(16)); // ~60 FPS
         }
+        LOG_DEBUG_DETAIL("Streaming loop ended");
     }
     
     std::unordered_map<std::string, ScenePtr> scenes_;

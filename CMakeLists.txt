@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # 编译选项
 if(MSVC)
     add_compile_options(/W4 /utf-8)
+    # 启用源文件信息用于日志
+    add_compile_options(/FC)
 else()
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -24,6 +26,9 @@ include_directories(${CMAKE_SOURCE_DIR}/third_party)
 # 查找依赖包
 find_package(OpenGL REQUIRED)
 find_package(Threads REQUIRED)
+
+# 添加本地spdlog依赖
+add_subdirectory(third_party/spdlog)
 
 # 平台特定设置
 if(WIN32)
