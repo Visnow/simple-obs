@@ -12,13 +12,13 @@ class SceneImpl : public Scene {
 public:
     explicit SceneImpl(const std::string& name);
     ~SceneImpl() override;
-    
+
     // IBase接口实现
     std::string getName() const override;
     std::string getId() const override;
     bool initialize() override;
     void shutdown() override;
-    
+
     // Scene接口实现
     void addSource(SourcePtr source) override;
     void removeSource(SourcePtr source) override;
@@ -31,4 +31,4 @@ private:
     bool initialized_;
 };
 
-} // namespace SimpleOBS 
+} // namespace SimpleOBS
